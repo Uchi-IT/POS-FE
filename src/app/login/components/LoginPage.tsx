@@ -16,8 +16,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import "../login.style.css";
-import Alert from "./AlertBerhasil";
-import Dialog from "./DialogCabang";
+import Alert from "../../../components/Alert";
+import Dialog from "../../../components/Dialog";
 
 const formSchema = z.object({
   email: z.string().min(2).max(50),
@@ -38,9 +38,9 @@ export default function LoginPage() {
   }
   return (
     <>
-      <div className="tablet-view flex">
-        <div className="gradient basis-1/2">
-          <div className="w-3/4 mx-auto py-[10%]">
+      <div className="w-full flex">
+        <div className="bg-gradient-to-b from-[#bacffc] via-[#8daef3] to-[#295bc9] basis-1/2">
+          <div className="w-3/4 mx-auto py-[8%]">
             <div className="flex items-center ml-8 mb-24">
               <Image
                 alt="logo"
@@ -132,8 +132,8 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      {/* <Dialog /> */}
-      {/* <Alert /> */}
+      <Dialog type="login_success" />
+      <Alert type="login_success" description="Berhasil Masuk!" />
     </>
   );
 }

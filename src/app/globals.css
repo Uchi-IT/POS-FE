@@ -2,11 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+/* view screen */
 .tablet-view {
- width: 100vw;
- height: auto;
+ @apply w-screen h-screen
 }
 
+/* variable shadcn ui setup */
+/* Start */
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -72,3 +74,4 @@
     @apply bg-background text-foreground;
   }
 }
+/* End */

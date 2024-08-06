@@ -3,8 +3,12 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./_context/AuthContext";
 import SWRWrapper from "./_context/SWRWrapper";
+import { Sidenav } from "../components/Sidenav";
 
-const roboto = Roboto({ subsets: ["latin"], weight: ["100", "300", "400", "500", "700", "900"] });
+const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "500", "700", "900"],
+});
 
 export const metadata: Metadata = {
   title: "Uchi Parfume Website",
@@ -20,7 +24,12 @@ export default function RootLayout({
     <html lang="en">
       <AuthProvider>
         <SWRWrapper>
-          <body className={roboto.className}>{children}</body>
+          <body className={roboto.className}>
+            <div className="tablet-view overflow-hidden flex">
+              <Sidenav />
+              {children}
+            </div>
+          </body>
         </SWRWrapper>
       </AuthProvider>
     </html>

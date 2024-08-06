@@ -47,6 +47,7 @@ const config = {
           DEFAULT: "#F5F5F5",
           25: "#F5F5F5",
           300: "#A9B1BC",
+          500: "#76818F",
           900: "#192434",
         },
         custom_base: {
@@ -70,6 +71,11 @@ const config = {
        h4: ['28px', '36px'],
        h5: ['24px', '32px'],
        h6: ['20px', '28px'],
+       L10: '10px',
+       L12: '12px',
+       L14: '14px',
+       L16: '16px',
+       L18: '18px',
       },
       borderRadius: {
         lg: "var(--radius)",
