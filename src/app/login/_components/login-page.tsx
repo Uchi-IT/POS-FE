@@ -18,24 +18,54 @@ import { z } from "zod";
 import "../login.style.css";
 import Alert from "../../../components/Alert";
 import Dialog from "../../../components/Dialog";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
-  email: z.string().min(2).max(50),
-  sandi: z.string().min(2).max(50),
+  email: z
+    .string()
+    .min(1, { message: "Email tidak boleh kosong" })
+    .email({ message: "Email tidak valid" }),
+  sandi: z.string().min(2, { message: "Password tidak boleh kosong" }),
+  rememberMe: z.boolean().default(false),
 });
 
 export default function LoginPage() {
+  const router = useRouter();
+
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [showAlert, setShowAlert] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
       sandi: "",
+      rememberMe: false,
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+    if (
+      values.email === "admin@uchiparfume.info" &&
+      values.sandi === "password"
+    ) {
+      setShowDialog(true);
+    } else {
+      // Handle invalid login
+      console.log("Login gagal");
+    }
   }
+
+  function handleCabangSelection(selectedCabang: string) {
+    setShowDialog(false);
+    setShowAlert(true);
+    // Navigasi ke dashboard setelah beberapa detik
+    setTimeout(() => {
+      router.push("/dashboard");
+    }, 2000);
+  }
+
   return (
     <>
       <div className="w-full flex">
@@ -67,9 +97,11 @@ export default function LoginPage() {
           </div>
         </div>
         <div className="basis-1/2">
-          <div className="ml-24 w-3/4 mt-[25%]">
+          <div className="ml-24 w-3/4 mt-[23%]">
             <div className="header mb-8">
-              <h1 className="text-h1 font-bold mb-4 text-custom_base-900">Masuk</h1>
+              <h1 className="text-h1 font-bold mb-4 text-custom_base-900">
+                Masuk
+              </h1>
               <p className="text-custom_base-900">
                 Selamat datang, semangat bekerja dan semoga harimu menyenangkan!
               </p>
@@ -113,18 +145,29 @@ export default function LoginPage() {
                     </FormItem>
                   )}
                 />
-                <div className="flex">
-                  <Checkbox id="terms1" />
-                  <div className="grid gap-1.5 leading-none">
-                    <label
-                      htmlFor="terms1"
-                      className="text-sm leading-none ml-4 peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                    >
-                      Ingat saya
-                    </label>
-                  </div>
+                <div className="flex items-center space-x-2">
+                  <FormField
+                    control={form.control}
+                    name="rememberMe"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel htmlFor="rememberMe">Ingat saya</FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
                 </div>
-                <Button type="submit" className="w-full py-6 bg-custom_primary-500">
+                <Button
+                  type="submit"
+                  className="w-full py-6 bg-custom_primary-500"
+                >
                   Masuk
                 </Button>
               </form>
@@ -132,8 +175,22 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      {/* <Dialog type="login_success" /> */}
-      {/* <Alert type="login_success" description="Berhasil Masuk!" /> */}
+      {showDialog && (
+        <Dialog
+          type="login_success"
+          isOpen={showDialog}
+          onClose={() => setShowDialog(false)}
+          onCabangSelect={handleCabangSelection}
+        />
+      )}
+
+      {showAlert && (
+        <Alert
+          type="login_success"
+          description="Berhasil Masuk!"
+          isVisible={showAlert}
+        />
+      )}
     </>
   );
 }
