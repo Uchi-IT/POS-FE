@@ -41,7 +41,7 @@ export default function LoginPage() {
       <div className="w-full flex">
         <div className="bg-gradient-to-b from-[#bacffc] via-[#8daef3] to-[#295bc9] basis-1/2">
           <div className="w-3/4 mx-auto py-[8%]">
-            <div className="flex items-center ml-8 mb-24">
+            <div className="flex items-center ml-8 mb-12">
               <Image
                 alt="logo"
                 src={"/logo.svg"}
@@ -56,18 +56,18 @@ export default function LoginPage() {
             <Image
               alt="login"
               src={"/loginPhoto.svg"}
-              width={450}
-              height={450}
+              width={350}
+              height={350}
               className="mx-auto mb-8"
             />
-            <h1 className="text-4xl max-w-sm mx-auto">
+            <h1 className="text-3xl max-w-sm mx-auto">
               Tetap <span className="font-bold">pantau dan catat</span>{" "}
               penjualan melalui Uchi’s Parfum Website
             </h1>
           </div>
         </div>
         <div className="basis-1/2">
-          <div className="ml-24 w-3/4 mt-[30%]">
+          <div className="ml-24 w-3/4 mt-[25%]">
             <div className="header mb-8">
               <h1 className="text-h1 font-bold mb-4 text-custom_base-900">Masuk</h1>
               <p className="text-custom_base-900">
@@ -132,8 +132,8 @@ export default function LoginPage() {
           </div>
         </div>
       </div>
-      <Dialog type="login_success" />
-      <Alert type="login_success" description="Berhasil Masuk!" />
+      {/* <Dialog type="login_success" /> */}
+      {/* <Alert type="login_success" description="Berhasil Masuk!" /> */}
     </>
   );
 }
