@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-const LoginPage = dynamic(() => import("./components/LoginPage"))
+const LoginPage = dynamic(() => import("./_components/login-page"))
 
 const page = () => {
   return <LoginPage />;

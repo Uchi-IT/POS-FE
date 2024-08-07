@@ -3,7 +3,6 @@ import { Roboto } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "./_context/AuthContext";
 import SWRWrapper from "./_context/SWRWrapper";
-import { Sidenav } from "../components/Sidenav";
 
 const roboto = Roboto({
   subsets: ["latin"],
@@ -26,7 +25,6 @@ export default function RootLayout({
         <SWRWrapper>
           <body className={roboto.className}>
             <div className="tablet-view overflow-hidden flex">
-              <Sidenav />
               {children}
             </div>
           </body>

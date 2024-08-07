@@ -23,39 +23,38 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
 
+type DialogProps = {
+  type: string;
+  isOpen: boolean;
+  onClose: () => void;
+  onCabangSelect: (selectedCabang: string) => void;
+};
+
 const cabang = [
-  {
-    value: "solo",
-    label: "Solo",
-  },
-  {
-    value: "banjarnegara",
-    label: "Banjarnegara",
-  },
-  {
-    value: "yogyakarta",
-    label: "Yogyakarta",
-  },
-  {
-    value: "jakarta",
-    label: "Jakarta",
-  },
+  { value: "solo", label: "Solo" },
+  { value: "banjarnegara", label: "Banjarnegara" },
+  { value: "yogyakarta", label: "Yogyakarta" },
+  { value: "jakarta", label: "Jakarta" },
 ];
 
-export default function DialogCustom(props: {type: string}) {
+export default function DialogCustom({ type, isOpen, onClose, onCabangSelect }: DialogProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  const handleSelanjutnya = () => {
+    if (value) {
+      onCabangSelect(value);
+      onClose();
+    }
+  };
+
   return (
     <>
-      {props.type === "login_success" ? (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button variant="outline">Edit Profile</Button>
-          </DialogTrigger>
+      {type === "login_success" && (
+        <Dialog open={isOpen} onOpenChange={onClose}>
           <DialogContent
             className="sm:max-w-[450px]"
             onInteractOutside={(e) => {
@@ -99,9 +98,7 @@ export default function DialogCustom(props: {type: string}) {
                           key={item.value}
                           value={item.value}
                           onSelect={(currentValue) => {
-                            setValue(
-                              currentValue === value ? "" : currentValue
-                            );
+                            setValue(currentValue === value ? "" : currentValue);
                             setOpen(false);
                           }}
                         >
@@ -120,21 +117,20 @@ export default function DialogCustom(props: {type: string}) {
               </Popover>
             </div>
             <DialogFooter>
-              <DialogClose asChild>
-                <Button className="w-full py-6" variant={"destructive"}>
-                  Batal
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button type="submit" className="w-full py-6">
-                  Selanjutnya
-                </Button>
-              </DialogClose>
+              <Button className="w-full py-6" variant="destructive" onClick={onClose}>
+                Batal
+              </Button>
+              <Button 
+                type="button" 
+                className="w-full py-6" 
+                onClick={handleSelanjutnya}
+                disabled={!value}
+              >
+                Selanjutnya
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
-      ) : (
-        ""
       )}
     </>
   );
