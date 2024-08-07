@@ -10,7 +10,7 @@ import {
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
-import { NavMenuItems } from "@/app/_constant";
+import { NavMenuItems } from "@/app/_constant/options";
 import { MenuItem } from "@/app/_utils/global.types";
 
 export function Sidenav() {

@@ -12,61 +12,24 @@ import {
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { Checkbox } from "@/components/ui/checkbox";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 import "../login.style.css";
 import Alert from "../../../components/Alert";
 import Dialog from "../../../components/Dialog";
+import { useLogin } from "../_hooks/useLogin";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-const formSchema = z.object({
-  email: z
-    .string()
-    .min(1, { message: "Email tidak boleh kosong" })
-    .email({ message: "Email tidak valid" }),
-  sandi: z.string().min(2, { message: "Password tidak boleh kosong" }),
-  rememberMe: z.boolean().default(false),
-});
 
 export default function LoginPage() {
-  const router = useRouter();
+  const {
+    form,
+    showDialog,
+    showAlert,
+    setShowDialog,
+    onSubmit,
+    handleCabangSelection,
+  } = useLogin();
 
-  const [showDialog, setShowDialog] = useState<boolean>(false);
-  const [showAlert, setShowAlert] = useState<boolean>(false);
-
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      sandi: "",
-      rememberMe: false,
-    },
-  });
-
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    if (
-      values.email === "admin@uchiparfume.info" &&
-      values.sandi === "password"
-    ) {
-      setShowDialog(true);
-    } else {
-      // Handle invalid login
-      console.log("Login gagal");
-    }
-  }
-
-  function handleCabangSelection(selectedCabang: string) {
-    setShowDialog(false);
-    setShowAlert(true);
-    
-    console.log(selectedCabang)
-
-    setTimeout(() => {
-      router.push("/pos");
-    }, 1500);
-  }
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   return (
     <>
@@ -138,10 +101,26 @@ export default function LoginPage() {
                         <span className="text-custom_danger-500">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input
-                          placeholder="Masukkan Kata sandi anda"
-                          {...field}
-                        />
+                        <div className="relative">
+                          <Input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Masukkan Kata sandi anda"
+                            {...field}
+                          />
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                            onClick={() => setShowPassword(!showPassword)}
+                          >
+                            {showPassword ? (
+                              <EyeOff className="h-4 w-4 text-gray-500" />
+                            ) : (
+                              <Eye className="h-4 w-4 text-gray-500" />
+                            )}
+                          </Button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
