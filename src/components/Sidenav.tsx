@@ -3,43 +3,20 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from 'next/navigation';
-import { MenuItem } from '../app/_utils/global.types';
-// import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-
-// interface MenuItem {
-//   title: string;
-//   href: string;
-//   submenus?: string[];
-//   subHref?: string[];
-// }
-
-const menuItems: MenuItem[] = [
-  { title: "Dashboard", href: "/dashboard" },
-  { title: "Point Of Sale", href: "/login" },
-  { title: "Gudang", href: "/dashboard" },
-  {
-    title: "Restok",
-    href: "/dashboard",
-    submenus: ["Submenu 1", "Submenu 2"],
-    subHref: ["/dashboard", "/login"],
-  },
-  { title: "Cabang", href: "/login" },
-  { title: "Karyawan", href: "/dashboard" },
-  {
-    title: "Riwayat",
-    href: "/login",
-    submenus: ["Submenu 1", "Submenu 2"],
-    subHref: ["/login", "/dashboard"],
-  },
-];
+import { usePathname } from "next/navigation";
+import {
+  ChevronDown,
+  ChevronUp,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { NavMenuItems } from "@/app/_constant";
+import { MenuItem } from "@/app/_utils/global.types";
 
 export function Sidenav() {
   const [isOpen, setIsOpen] = useState(true);
-  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>(
-    {}
-  );
-  const pathname = usePathname()
+  const [openSubmenus, setOpenSubmenus] = useState<{ [key: string]: boolean }>({});
+  const pathname = usePathname();
 
   const toggleSidenav = () => {
     setIsOpen(!isOpen);
@@ -52,79 +29,75 @@ export function Sidenav() {
     }));
   };
 
+  const isActive = (item: MenuItem) => {
+    return pathname === item.href || 
+           (item.submenus && item.subHref?.some(subHref => pathname.startsWith(subHref)));
+  };
+
   return (
     <div
-      className={`flex flex-col bg-custom_base-50 text-custom_neutral-500 transition-width duration-300 ${
-        isOpen ? "w-96" : "w-32"
+      className={`flex flex-col bg-custom_base-50 text-custom_neutral-500 transition-all duration-300 ${
+        isOpen ? "w-96" : "w-20"
       }`}
     >
-      <div className="flex items-center ml-8 mt-8">
+      <div className={`flex items-center ${isOpen ? "ml-8" : "justify-center"} mt-8`}>
         <Image
           alt="logo"
           src={"/logo.svg"}
           width={55}
           height={49}
-          className="mr-2"
+          className={isOpen ? "mr-2" : ""}
         />
         <h5
-          className={`text-h5 font-bold text-custom_primary-900 ${
-            isOpen ? "opacity-100" : "opacity-0"
+          className={`text-h5 font-bold text-custom_primary-900 transition-opacity duration-300 ${
+            isOpen ? "opacity-100" : "opacity-0 w-0"
           }`}
         >
           UCHI PARFUME
         </h5>
       </div>
-      <nav className="flex flex-col flex-1 p-8 text-custom_neutral-500 text-L16 font-semibold">
-        {menuItems.map((item) => (
-          <div key={item.title}>
+      <nav className="flex flex-col flex-1 p-4 text-custom_neutral-500 text-L16 font-semibold">
+        {NavMenuItems.map((item) => (
+          <div key={item.title} className="relative">
             <Link
-              href={
-                !item.submenus
-                  ? item.href
-                  : item.subHref !== undefined
-                  ? item.subHref[0]
-                  : "#"
-              }
+              href={!item.submenus ? item.href : (item.subHref !== undefined ? item.subHref[0] : "#")}
               onClick={() => item.submenus && toggleSubmenu(item.title)}
-              className={`flex items-center p-2 my-2 transition-colors duration-200 hover:bg-[#bacffc] hover:text-custom_primary-500 ${pathname === item.href ? 'bg-[#bacffc] text-custom_primary-500' : item.submenus?.some(subMenu => item.subHref?.some(subHref => subHref.includes(subMenu))) ? 'bg-[#bacffc] text-custom_primary-500' : ''}`}
+              className={`flex items-center p-2 my-2 transition-colors duration-200 hover:bg-[#bacffc] hover:text-custom_primary-500 ${
+                isActive(item) ? "bg-[#bacffc] text-custom_primary-500" : ""
+              } ${isOpen ? "" : "justify-center"}`}
             >
-              <p>test</p>
-              <div className="w-full flex justify-between">
-                <span
-                  className={`ml-4 transition-opacity duration-300 ${
-                    isOpen ? "" : "hidden"
-                  }`}
-                >
+              {isActive(item) && (
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-custom_primary-700"></div>
+              )}
+              {item.icon && <item.icon size={24} />}
+              <div className={`w-full flex justify-between ${isOpen ? "" : "hidden"}`}>
+                <span className="ml-4">
                   {item.title}
                 </span>
-                {item.submenus && isOpen && (
+                {item.submenus && (
                   <span className="ml-4">
-                    {openSubmenus[item.title] ? <p>up</p> : <p>down</p>}
+                    {openSubmenus[item.title] ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
                   </span>
                 )}
               </div>
             </Link>
             {item.submenus &&
               openSubmenus[item.title] &&
+              isOpen &&
               item.submenus.map((submenu, index) => (
                 <div
-                  className={`transition-colors duration-200 hover:text-custom_primary-500 ${
-                    isOpen ? "pl-11" : ""
-                  } ${item.subHref !== undefined && pathname === item.subHref[index] ? 'text-custom_primary-500' : ''}`}
+                  className={`transition-colors duration-200 hover:text-custom_primary-500 pl-11
+                    ${item.subHref !== undefined && pathname === item.subHref[index] ? "text-custom_primary-500" : ""}`}
                   key={submenu}
                 >
                   <Link
-                    href={
-                      item.subHref !== undefined ? item.subHref[index] : "#"
-                    }
+                    href={item.subHref !== undefined ? item.subHref[index] : "#"}
                     className="flex items-center p-2 my-2"
                   >
-                    <p>test</p>
-                    <span
-                      className={`ml-4 transition-opacity duration-300 ${
-                        isOpen ? "" : "hidden"
-                      }`}
-                    >
+                    <div className="w-6 h-6 flex items-center justify-center">
+                      <div className="w-2 h-2 bg-current rounded-full"></div>
+                    </div>
+                    <span className="ml-4">
                       {submenu}
                     </span>
                   </Link>
@@ -138,11 +111,13 @@ export function Sidenav() {
         className="focus:outline-none text-base text-custom_primary-500 border-t-2 border-custom_primary-500 m-2"
       >
         {isOpen ? (
-          <p className="p-4 text-xl">
-            <span className="mr-2 font-bold text-2xl">&lt;&lt;</span> Geser
+          <p className="p-4 text-lg flex items-center justify-center">
+            <ChevronLeft size={24} className="mr-2" /> Geser
           </p>
         ) : (
-          <p className="p-4 text-2xl font-bold">&gt;&gt;</p>
+          <p className="p-4 text-2xl font-bold flex justify-center">
+            <ChevronRight size={24} />
+          </p>
         )}
       </button>
     </div>

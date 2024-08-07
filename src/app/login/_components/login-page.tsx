@@ -60,10 +60,12 @@ export default function LoginPage() {
   function handleCabangSelection(selectedCabang: string) {
     setShowDialog(false);
     setShowAlert(true);
-    // Navigasi ke dashboard setelah beberapa detik
+    
+    console.log(selectedCabang)
+
     setTimeout(() => {
-      router.push("/dashboard");
-    }, 2000);
+      router.push("/pos");
+    }, 1500);
   }
 
   return (
